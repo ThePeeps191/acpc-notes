@@ -250,7 +250,7 @@ def compile_ok(gxx, src, tmpdir):
     p = tmpdir / "a.cpp"
     p.write_text(src)
     r = subprocess.run([gxx, "-std=gnu++17", "-fsyntax-only", "-Wall", "-Wextra",
-                        "-Wno-unused", "-Wno-sign-compare", "-Wno-unused-parameter", "-Wno-misleading-indentation",
+                        "-Wno-unused", "-Wno-sign-compare", "-Wno-unused-parameter", "-Wno-misleading-indentation", "-Wno-psabi",
                         str(p)], capture_output=True, text=True)
     return r.returncode == 0, r.stderr
 
@@ -258,12 +258,15 @@ def compile_ok(gxx, src, tmpdir):
 def check():
     """Compile every ```cpp block (with the template prelude). First-line markers:
     `// frag` = statement fragment, wrapped in a function; `// sketch` / `// nocheck` =
-    skipped. A block may use declarations from earlier blocks of the same file."""
+    skipped. A block may use declarations from earlier blocks of the same file/folder."""
     gxx = find_gxx()
     tmpdir = Path(tempfile.mkdtemp())
     total = bad = 0
+    folder_blocks, cur_folder = [], None
     for f in sorted(NOTES.rglob("*.md")):
         text = f.read_text()
+        if f.parent != cur_folder:
+            cur_folder, folder_blocks = f.parent, []
         earlier = []  # declaration blocks seen so far in this file
         for i, m in enumerate(CPP_BLOCK.finditer(text)):
             code = m.group(1)
@@ -281,8 +284,11 @@ def check():
                 ok, err = compile_ok(gxx, PRELUDE + body + tail, tmpdir)
                 if not ok and earlier:
                     ok, err = compile_ok(gxx, PRELUDE + "\n".join(earlier) + body + tail, tmpdir)
+                if not ok and folder_blocks:  # e.g. geometry builds on the Point struct of §9.1
+                    ok, err = compile_ok(gxx, PRELUDE + "\n".join(folder_blocks) + body + tail, tmpdir)
             if not frag and not has_main and "#include <bits/stdc++.h>" not in code:
                 earlier.append(code)
+                folder_blocks.append(code)
             line = text[:m.start()].count("\n") + 1
             if not ok:
                 bad += 1
