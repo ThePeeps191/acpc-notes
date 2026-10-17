@@ -1,0 +1,4 @@
+Markdown==3.11.1
+Pygments==2.21.0
+playwright==1.64.0
+pypdf==6.21.0

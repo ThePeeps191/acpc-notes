@@ -1,0 +1,61 @@
+/* Print stylesheet for ACPC notes (rendered by Chrome). Dense but readable. */
+@page { size: Letter; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: "Charter", "Georgia", "Times New Roman", serif;
+  font-size: 9.6pt; line-height: 1.32; color: #111; background: #fff; margin: 0;
+}
+h1, h2, h3, h4, h5, h6, .toc { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+h1.part {
+  break-before: page; font-size: 17pt; margin: 0 0 6pt; padding: 3pt 0;
+  border-bottom: 2.5pt solid #1d4f91; color: #1d4f91;
+}
+body > h1.part:first-child { break-before: auto; }
+h2 { font-size: 12.5pt; margin: 11pt 0 4pt; padding-bottom: 1.5pt;
+     border-bottom: 0.8pt solid #9bb3d6; color: #12345e; break-after: avoid; }
+h3 { font-size: 10.6pt; margin: 8pt 0 3pt; color: #12345e; break-after: avoid; }
+h4 { font-size: 9.8pt; margin: 6pt 0 2pt; break-after: avoid; }
+h5, h6 { font-size: 9.6pt; margin: 5pt 0 2pt; font-style: italic; break-after: avoid; }
+.num { color: #6a86b0; font-weight: 600; margin-right: 2pt; }
+p { margin: 2.5pt 0 3.5pt; }
+ul, ol { margin: 2pt 0 4pt; padding-left: 15pt; }
+li { margin: 0.6pt 0; }
+li > p { margin: 1pt 0; }
+a { color: inherit; text-decoration: none; }
+strong { color: #000; }
+hr { border: 0; border-top: 0.6pt solid #bbb; margin: 6pt 0; }
+
+/* code */
+code, pre { font-family: "Menlo", "DejaVu Sans Mono", "Consolas", monospace; }
+:not(pre) > code { font-size: 8.3pt; background: #f1f3f6; padding: 0 1.5pt; border-radius: 2pt; }
+.hl { background: #f7f8fa !important; border-left: 2pt solid #9bb3d6; margin: 3pt 0 5pt;
+      padding: 2.5pt 5pt; border-radius: 1pt; }
+.hl pre { margin: 0; font-size: 7.6pt; line-height: 1.22; white-space: pre-wrap;
+          word-break: break-all; background: transparent !important; }
+pre { break-inside: auto; }
+.hl .c, .hl .c1, .hl .cm { font-style: normal; }
+
+/* tables */
+table { border-collapse: collapse; margin: 3pt 0 6pt; font-size: 8.6pt; width: auto;
+        break-inside: auto; }
+th, td { border: 0.5pt solid #b9c3d1; padding: 1.2pt 4pt; vertical-align: top; text-align: left; }
+th { background: #e8eef7; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+tr { break-inside: avoid; }
+td code { font-size: 7.8pt; }
+
+/* callouts: > **Tip:** ... */
+blockquote { margin: 4pt 0; padding: 2pt 7pt; border-left: 2.5pt solid #e0a100;
+             background: #fff8e6; break-inside: avoid; }
+blockquote p { margin: 1.5pt 0; }
+
+/* contents */
+.tocpage { font-size: 9pt; }
+.toc { columns: 2; column-gap: 18pt; }
+.toc-title { column-span: all; font-size: 16pt; font-weight: 700; color: #1d4f91;
+             border-bottom: 2pt solid #1d4f91; margin-bottom: 6pt; }
+.toc1, .toc2 { display: flex; break-inside: avoid; }
+.toc1 { font-weight: 700; margin-top: 5pt; color: #1d4f91; font-size: 10pt; }
+.toc2 { padding-left: 4pt; font-size: 8.6pt; line-height: 1.28; }
+.tn { min-width: 26pt; color: #6a86b0; }
+.tt { flex: 1; }
+.tp { min-width: 18pt; text-align: right; }

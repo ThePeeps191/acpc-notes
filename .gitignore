@@ -1,0 +1,8 @@
+.venv/
+build/
+__pycache__/
+ref/
+book.pdf
+*.out
+tests/bin/
+.DS_Store
