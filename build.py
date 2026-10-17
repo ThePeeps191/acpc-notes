@@ -216,7 +216,15 @@ def build_pdf(keep_html: bool):
 # ---------------------------------------------------------------- check
 
 CPP_BLOCK = re.compile(r"^```(?:cpp|c\+\+)[^\n]*\n(.*?)^```", re.S | re.M)
-PRELUDE = "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n"
+PRELUDE = """#include <bits/stdc++.h>
+using namespace std;
+using ll = long long; using ull = unsigned long long; using ld = long double;
+using pii = pair<int, int>; using pll = pair<ll, ll>;
+#define all(x) begin(x), end(x)
+#define sz(x) (int)(x).size()
+#define rep(i, a, b) for (int i = (a); i < (b); ++i)
+const ll INF = 4e18; const int MOD = 1e9 + 7;
+"""
 
 
 def find_gxx():
