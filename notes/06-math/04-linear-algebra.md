@@ -31,7 +31,9 @@ Compute the first ~2k terms of any sequence that satisfies a linear recurrence o
 ```cpp
 // [stress-tested] mod must be prime. Returns tr with s[i] = sum_j tr[j] * s[i-1-j].
 vector<ll> berlekampMassey(const vector<ll>& s, ll mod) {
-    auto pw = [&](ll x, ll e) { ll r = 1; for (x %= mod; e; e >>= 1, x = x * x % mod) if (e & 1) r = r * x % mod; return r; };
+    auto pw = [&](ll x, ll e) {
+        ll r = 1; for (x %= mod; e; e >>= 1, x = x * x % mod) if (e & 1) r = r * x % mod; return r;
+    };
     int n = sz(s), L = 0, m = 0; vector<ll> C(n, 0), B(n, 0), T; C[0] = B[0] = 1; ll b = 1;
     rep(i, 0, n) {
         ++m; ll d = s[i] % mod;
@@ -69,7 +71,8 @@ Give BM at least 2·(order) terms, preferably more (it returns the shortest recu
 ## Gaussian elimination (reals)
 
 ```cpp
-// [stress-tested] a = n rows of (m coefficients + rhs). Returns 0: no solution, 1: unique, 2: infinitely many.
+// [stress-tested] a = n rows of (m coefficients + rhs).
+// Returns 0: no solution, 1: unique, 2: infinitely many.
 // ans = one solution (free variables = 0).
 int gauss(vector<vector<double>> a, vector<double>& ans) {
     const double EPS = 1e-9;
@@ -102,7 +105,9 @@ int gauss(vector<vector<double>> a, vector<double>& ans) {
 ```cpp
 // [stress-tested] determinant mod prime p (entries any ll). Same elimination solves systems mod p.
 ll detMod(vector<vector<ll>> a, ll p) {
-    auto pw = [&](ll b, ll e) { ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r; };
+    auto pw = [&](ll b, ll e) {
+        ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r;
+    };
     int n = sz(a); ll det = 1;
     for (auto& row : a) for (auto& x : row) x = ((x % p) + p) % p;
     rep(c, 0, n) {
@@ -130,7 +135,9 @@ If the answer is a polynomial of degree k in n (e.g. Σ_{i=1}^{n} i^k has degree
 ll lagrange(const vector<ll>& y, ll x, ll p) {
     int k = sz(y) - 1; x %= p; if (x < 0) x += p;
     if (x <= k) return y[x] % p;
-    auto pw = [&](ll b, ll e) { ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r; };
+    auto pw = [&](ll b, ll e) {
+        ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r;
+    };
     vector<ll> pre(k + 2, 1), suf(k + 2, 1), fact(k + 1, 1);
     rep(i, 0, k + 1) pre[i + 1] = pre[i] * ((x - i) % p) % p;
     for (int i = k; i >= 0; --i) suf[i] = suf[i + 1] * ((x - i) % p) % p;

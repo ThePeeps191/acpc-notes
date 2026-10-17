@@ -11,7 +11,10 @@ struct Hasher {
         ull r = (ull)(c & M) + (ull)(c >> 61);
         return r >= M ? r - M : r;
     }
-    static ull base() { static ull B = mt19937_64(chrono::steady_clock::now().time_since_epoch().count())() % (M - 1000) + 500; return B; }
+    static ull base() {
+        static ull B = mt19937_64(chrono::steady_clock::now().time_since_epoch().count())() % (M - 1000) + 500;
+        return B;
+    }
     vector<ull> h, p;
     Hasher(const string& s) : h(sz(s) + 1, 0), p(sz(s) + 1, 1) {
         ull B = base();

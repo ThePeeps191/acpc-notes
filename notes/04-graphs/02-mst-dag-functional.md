@@ -6,7 +6,12 @@
 // [stress-tested] Kruskal: edges (w, u, v). Returns total weight (n-1 edges if connected). Needs DSU (§3.1).
 struct DSUk { vector<int> p; DSUk(int n) : p(n, -1) {}
     int f(int x) { return p[x] < 0 ? x : p[x] = f(p[x]); }
-    bool u(int a, int b) { a = f(a); b = f(b); if (a == b) return 0; if (p[a] > p[b]) swap(a, b); p[a] += p[b]; p[b] = a; return 1; } };
+    bool u(int a, int b) {
+        a = f(a); b = f(b); if (a == b) return 0;
+        if (p[a] > p[b]) swap(a, b);
+        p[a] += p[b]; p[b] = a; return 1;
+    }
+};
 ll kruskal(int n, vector<tuple<ll, int, int>> edges, vector<tuple<ll, int, int>>* used = nullptr) {
     sort(all(edges)); DSUk d(n); ll tot = 0;
     for (auto& [w, a, b] : edges) if (d.u(a, b)) { tot += w; if (used) used->push_back({w, a, b}); }
@@ -25,7 +30,8 @@ ll kruskal(int n, vector<tuple<ll, int, int>> edges, vector<tuple<ll, int, int>>
 ## Topological sort and DAG DP
 
 ```cpp
-// [stress-tested] Kahn. Returns empty vector if there is a cycle. Use a min-heap instead of queue for lexicographically smallest order.
+// [stress-tested] Kahn. Returns empty vector if there is a cycle.
+// Min-heap instead of queue => lexicographically smallest order.
 vector<int> topo(const vector<vector<int>>& g) {
     int n = sz(g); vector<int> indeg(n), order;
     rep(u, 0, n) for (int v : g[u]) indeg[v]++;

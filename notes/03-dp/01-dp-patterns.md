@@ -60,7 +60,8 @@ To reconstruct LIS: store for each i the position `pos[i]` it took in d and `pre
 `dp[l][r]` from smaller intervals; iterate `len` from 1 to n. O(n³) with a split point, O(n²) without.
 
 ```cpp
-// [stress-tested] number of palindromic subsequences (as index sets, non-empty) mod p — ACPC 2016 Palindromic Naming
+// [stress-tested] number of palindromic subsequences (as index sets, non-empty) mod p
+// (ACPC 2016 Palindromic Naming)
 ll countPalSubseq(const string& s, ll mod) {
     int n = sz(s);
     vector<vector<ll>> dp(n, vector<ll>(n, 0));
@@ -69,7 +70,8 @@ ll countPalSubseq(const string& s, ll mod) {
         rep(r, l + 1, n) {
             ll in = (l + 1 <= r - 1) ? dp[l + 1][r - 1] : 0;
             dp[l][r] = (dp[l + 1][r] + dp[l][r - 1] - in + mod) % mod;  // inclusion–exclusion
-            if (s[l] == s[r]) dp[l][r] = (dp[l][r] + in + 1) % mod;     // pair s[l], s[r] around any inner one or none
+            // s[l], s[r] can wrap any inner palindrome, or nothing
+            if (s[l] == s[r]) dp[l][r] = (dp[l][r] + in + 1) % mod;
         }
     }
     return dp[0][n - 1];

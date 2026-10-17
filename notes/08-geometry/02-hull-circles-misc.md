@@ -81,7 +81,9 @@ pair<Pd, double> minEnclosingCircle(vector<Pd> ps) {
         o = ps[i]; r = 0;
         rep(j, 0, i) if ((o - ps[j]).len() > r * EPS) {
             o = (ps[i] + ps[j]) / 2; r = (o - ps[i]).len();
-            rep(k, 0, j) if ((o - ps[k]).len() > r * EPS) { o = ccCenter(ps[i], ps[j], ps[k]); r = (o - ps[i]).len(); }
+            rep(k, 0, j) if ((o - ps[k]).len() > r * EPS) {
+                o = ccCenter(ps[i], ps[j], ps[k]); r = (o - ps[i]).len();
+            }
         }
     }
     return {o, r};

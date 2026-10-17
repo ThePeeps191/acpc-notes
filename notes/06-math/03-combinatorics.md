@@ -37,7 +37,7 @@
 
 ## Inclusion–exclusion
 
-|A_1 ∪ … ∪ A_n| = Σ_{nonempty S} (−1)^{|S|+1} |∩_{i∈S} A_i|. Typical shape: count objects violating **none** of n conditions = Σ_{S} (−1)^{|S|} (#objects violating at least all in S). With symmetric conditions this collapses to Σ_j (−1)^j C(n, j)·f(j).
+|A_1 ∪ … ∪ A_n| = Σ over nonempty S of (−1)^(|S|+1)·|intersection of A_i for i ∈ S|. Typical shape: count objects violating **none** of n conditions = Σ over all S of (−1)^|S|·(#objects violating at least all conditions in S). With symmetric conditions this collapses to Σ_j (−1)^j C(n, j)·f(j).
 
 - Count integers ≤ N divisible by none of primes p_1..p_k: Σ over subsets (−1)^{|S|} ⌊N / Π p⌋ (k ≤ 15 → 2^k terms; prune when the product exceeds N).
 - Count arrangements where at least one of p properties holds (ACPC 2024 *A Little to the Right*): either inclusion–exclusion over subsets of properties, or observe structure (a property with all-distinct values defines exactly one order; answer = number of distinct such orders).

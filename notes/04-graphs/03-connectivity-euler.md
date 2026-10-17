@@ -65,7 +65,8 @@ Modelling: each boolean choice is a variable; constraints must be clauses of **t
 struct BridgeCut {
     int n, timer = 0; vector<vector<pii>> g; vector<int> tin, low;
     vector<char> isBridge, isCut;
-    BridgeCut(int n, const vector<pii>& edges) : n(n), g(n), tin(n, -1), low(n), isBridge(sz(edges)), isCut(n) {
+    BridgeCut(int n, const vector<pii>& edges)
+        : n(n), g(n), tin(n, -1), low(n), isBridge(sz(edges)), isCut(n) {
         rep(i, 0, sz(edges)) { auto [u, v] = edges[i]; g[u].push_back({v, i}); g[v].push_back({u, i}); }
         rep(v, 0, n) if (tin[v] == -1) dfs(v, -1);
     }

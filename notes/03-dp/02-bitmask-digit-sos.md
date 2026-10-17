@@ -80,7 +80,9 @@ ll dominoTilings(int n, int m, ll mod) {          // m = width (small)
         vector<ll> nd(1 << m, 0);
         rep(mask, 0, 1 << m) if (dp[mask]) {
             ll v = dp[mask];
-            if (mask >> j & 1) { nd[mask ^ (1 << j)] = (nd[mask ^ (1 << j)] + v) % mod; continue; } // already covered
+            if (mask >> j & 1) {                                              // already covered
+                nd[mask ^ (1 << j)] = (nd[mask ^ (1 << j)] + v) % mod; continue;
+            }
             nd[mask | (1 << j)] = (nd[mask | (1 << j)] + v) % mod;                  // vertical domino down
             if (j + 1 < m && !(mask >> (j + 1) & 1))                                // horizontal domino right
                 nd[mask | (1 << (j + 1))] = (nd[mask | (1 << (j + 1))] + v) % mod;

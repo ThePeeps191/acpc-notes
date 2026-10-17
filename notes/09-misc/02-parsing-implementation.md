@@ -30,15 +30,23 @@ struct Parser {
     char peek() { return i < s.size() ? s[i] : 0; }
     ll expr() {
         ll v = term();
-        while (peek() == '+' || peek() == '-') { char op = s[i++]; ll r = term(); v = op == '+' ? v + r : v - r; }
+        while (peek() == '+' || peek() == '-') {
+            char op = s[i++]; ll r = term(); v = op == '+' ? v + r : v - r;
+        }
         return v;
     }
     ll term() {
         ll v = unary();
-        while (peek() == '*' || peek() == '/') { char op = s[i++]; ll r = unary(); v = op == '*' ? v * r : v / r; }
+        while (peek() == '*' || peek() == '/') {
+            char op = s[i++]; ll r = unary(); v = op == '*' ? v * r : v / r;
+        }
         return v;
     }
-    ll unary() { if (peek() == '-') { ++i; return -unary(); } if (peek() == '+') { ++i; return unary(); } return power(); }
+    ll unary() {
+        if (peek() == '-') { ++i; return -unary(); }
+        if (peek() == '+') { ++i; return unary(); }
+        return power();
+    }
     ll power() {
         ll b = atom();
         if (peek() == '^') { ++i; ll e = unary(); ll r = 1; while (e-- > 0) r *= b; return r; }
@@ -71,7 +79,10 @@ struct Parser {
 ```cpp
 // [stress-tested]
 bool leap(int y) { return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0; }
-int daysInMonth(int y, int m) { static const int d[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; return d[m - 1] + (m == 2 && leap(y)); }
+int daysInMonth(int y, int m) {
+    static const int d[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return d[m - 1] + (m == 2 && leap(y));
+}
 // days since a fixed epoch (proleptic Gregorian); difference of two dates = difference of these
 ll dayNumber(ll y, ll m, ll d) {
     if (m < 3) { y--; m += 12; }

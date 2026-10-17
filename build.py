@@ -69,14 +69,14 @@ def md_to_html(text: str) -> str:
 
 HEAD_RE = re.compile(r"<h([1-5])([^>]*)>(.*?)</h\1>", re.S)
 CODE_SPLIT = re.compile(r"(<pre.*?</pre>|<code.*?</code>)", re.S)
-SUP_RE = re.compile(r"(?<=[A-Za-z0-9)\]])\^(\([^()]{1,20}\)|-?[A-Za-z0-9]{1,8}(?:\.[0-9]+)?)")
+SUP_RE = re.compile(r"(?<=[A-Za-z0-9)\]}])\^(\([^()]{1,20}\)|\{[^{}]{1,20}\}|-?[A-Za-z0-9]{1,8}(?:\.[0-9]+)?)")
 
 
 def superscripts(body: str) -> str:
     """Prose `10^9`, `n^2`, `2^(n/2)` -> <sup>; code is left untouched."""
     parts = CODE_SPLIT.split(body)
     for i in range(0, len(parts), 2):
-        parts[i] = SUP_RE.sub(lambda m: f"<sup>{m.group(1).strip('()') if m.group(1).startswith('(') else m.group(1)}</sup>", parts[i])
+        parts[i] = SUP_RE.sub(lambda m: f"<sup>{m.group(1)[1:-1] if m.group(1)[0] in '({' else m.group(1)}</sup>", parts[i])
     return "".join(parts)
 
 

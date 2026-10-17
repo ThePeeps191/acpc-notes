@@ -52,10 +52,17 @@ Works for any sequence (vector of ints) — useful for necklaces, cyclic polygon
 struct Trie {
     vector<array<int, 26>> nxt; vector<int> endCnt, passCnt;
     Trie() { newNode(); }
-    int newNode() { nxt.push_back({}); nxt.back().fill(-1); endCnt.push_back(0); passCnt.push_back(0); return sz(nxt) - 1; }
+    int newNode() {
+        nxt.push_back({}); nxt.back().fill(-1); endCnt.push_back(0); passCnt.push_back(0);
+        return sz(nxt) - 1;
+    }
     void insert(const string& s) {
         int v = 0; passCnt[0]++;
-        for (char ch : s) { int c = ch - 'a'; if (nxt[v][c] < 0) { int u = newNode(); nxt[v][c] = u; } v = nxt[v][c]; passCnt[v]++; }
+        for (char ch : s) {
+            int c = ch - 'a';
+            if (nxt[v][c] < 0) { int u = newNode(); nxt[v][c] = u; }
+            v = nxt[v][c]; passCnt[v]++;
+        }
         endCnt[v]++;
     }
     int countPrefix(const string& s) {             // # inserted strings with prefix s
@@ -73,10 +80,17 @@ struct Trie {
 struct AhoCorasick {
     vector<array<int, 26>> go; vector<int> link, cnt, order;
     AhoCorasick() { add(); }
-    int add() { go.push_back({}); go.back().fill(-1); link.push_back(0); cnt.push_back(0); return sz(go) - 1; }
+    int add() {
+        go.push_back({}); go.back().fill(-1); link.push_back(0); cnt.push_back(0);
+        return sz(go) - 1;
+    }
     int insert(const string& s) {                  // returns terminal state of s
         int v = 0;
-        for (char ch : s) { int c = ch - 'a'; if (go[v][c] < 0) { int u = add(); go[v][c] = u; } v = go[v][c]; }
+        for (char ch : s) {
+            int c = ch - 'a';
+            if (go[v][c] < 0) { int u = add(); go[v][c] = u; }
+            v = go[v][c];
+        }
         cnt[v]++; return v;
     }
     void build() {
@@ -122,7 +136,10 @@ struct SuffixArray {
             rep(i, 1, lim) ws[i] += ws[i - 1];
             for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
             swap(x, y); p = 1; x[sa[0]] = 0;
-            rep(i, 1, n) { a = sa[i - 1]; b = sa[i]; x[b] = (y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++; }
+            rep(i, 1, n) {
+                a = sa[i - 1]; b = sa[i];
+                x[b] = (y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
+            }
         }
         for (int i = 0, j; i < n - 1; lcp[x[i++]] = k)
             for (k && k--, j = sa[x[i] - 1]; s[i + k] == s[j + k]; k++);
@@ -153,7 +170,9 @@ struct SAM {
             if (st[p].len + 1 == st[q].len) st[cur].link = q;
             else {
                 int clone = sz(st); St cl = st[q]; cl.len = st[p].len + 1; st.push_back(cl);
-                while (p != -1 && st[p].next.count(c) && st[p].next[c] == q) { st[p].next[c] = clone; p = st[p].link; }
+                while (p != -1 && st[p].next.count(c) && st[p].next[c] == q) {
+                    st[p].next[c] = clone; p = st[p].link;
+                }
                 st[q].link = st[cur].link = clone;
             }
         }

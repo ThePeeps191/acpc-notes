@@ -45,7 +45,11 @@ vector<ll> multiply(const vector<ll>& a, const vector<ll>& b) {
 ```cpp
 // [stress-tested] mod = 998244353 = 119 * 2^23 + 1, primitive root 3. Max length 2^23.
 const ll NMOD = 998244353;
-ll npow(ll b, ll e) { ll r = 1; b %= NMOD; for (; e; e >>= 1, b = b * b % NMOD) if (e & 1) r = r * b % NMOD; return r; }
+ll npow(ll b, ll e) {
+    ll r = 1; b %= NMOD;
+    for (; e; e >>= 1, b = b * b % NMOD) if (e & 1) r = r * b % NMOD;
+    return r;
+}
 void ntt(vector<ll>& a, bool invert) {
     int n = sz(a);
     for (int i = 1, j = 0; i < n; ++i) {

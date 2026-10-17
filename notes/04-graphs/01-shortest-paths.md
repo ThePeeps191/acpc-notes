@@ -99,7 +99,8 @@ Typical: "minimum number of walls to break", "minimum number of direction change
 
 ```cpp
 // [stress-tested] adj[u] = {(v, w)}, w >= 0. par gives the shortest path tree.
-vector<ll> dijkstra(const vector<vector<pair<int, ll>>>& adj, const vector<int>& srcs, vector<int>* par = nullptr) {
+vector<ll> dijkstra(const vector<vector<pair<int, ll>>>& adj, const vector<int>& srcs,
+                    vector<int>* par = nullptr) {
     int n = sz(adj); vector<ll> d(n, INF);
     if (par) par->assign(n, -1);
     priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq;
@@ -138,7 +139,10 @@ vector<ll> residueDist(const vector<ll>& coins) {
     while (!pq.empty()) {
         auto [du, r] = pq.top(); pq.pop();
         if (du != d[r]) continue;
-        for (ll c : coins) { int nr = (r + c) % a; if (du + c < d[nr]) { d[nr] = du + c; pq.push({d[nr], nr}); } }
+        for (ll c : coins) {
+            int nr = (r + c) % a;
+            if (du + c < d[nr]) { d[nr] = du + c; pq.push({d[nr], nr}); }
+        }
     }
     return d;   // X representable iff d[X % a] <= X
 }
@@ -163,7 +167,8 @@ Marking only in the n-th round misses some affected vertices, so the second loop
 ## Floyd–Warshall
 
 ```cpp
-// [stress-tested] d[i][j] = edge weight or INF, d[i][i] = 0. Negative cycle through i iff d[i][i] < 0 afterwards.
+// [stress-tested] d[i][j] = edge weight or INF, d[i][i] = 0.
+// Negative cycle through i iff d[i][i] < 0 afterwards.
 void floyd(vector<vector<ll>>& d) {
     int n = sz(d);
     rep(k, 0, n) rep(i, 0, n) if (d[i][k] < INF) rep(j, 0, n)

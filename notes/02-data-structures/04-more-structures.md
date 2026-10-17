@@ -74,8 +74,12 @@ struct Treap {
         push(b); t[b].l = merge(a, t[b].l); pull(b); return b;
     }
     // helpers on root (0-indexed, inclusive ranges)
-    void insert(int& root, int pos, ll v) { int a, b; split(root, pos, a, b); root = merge(merge(a, make(v)), b); }
-    void erase(int& root, int pos) { int a, b, c; split(root, pos, a, b); split(b, 1, b, c); root = merge(a, c); }
+    void insert(int& root, int pos, ll v) {
+        int a, b; split(root, pos, a, b); root = merge(merge(a, make(v)), b);
+    }
+    void erase(int& root, int pos) {
+        int a, b, c; split(root, pos, a, b); split(b, 1, b, c); root = merge(a, c);
+    }
     void reverse(int& root, int l, int r) {
         int a, b, c; split(root, l, a, b); split(b, r - l + 1, b, c);
         t[b].rev ^= 1; root = merge(merge(a, b), c);

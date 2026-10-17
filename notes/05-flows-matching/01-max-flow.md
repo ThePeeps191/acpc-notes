@@ -94,7 +94,10 @@ ll minFlowCoverEdges(int n, const vector<pii>& edges, int s, int t) {
     for (auto [u, v] : edges) { d.addEdge(u, v, BIG - 1); ex[v] += 1; ex[u] -= 1; }
     int ts = d.addEdge(t, s, BIG);
     ll need = 0;
-    rep(v, 0, n) { if (ex[v] > 0) { d.addEdge(S, v, ex[v]); need += ex[v]; } else if (ex[v] < 0) d.addEdge(v, T, -ex[v]); }
+    rep(v, 0, n) {
+        if (ex[v] > 0) { d.addEdge(S, v, ex[v]); need += ex[v]; }
+        else if (ex[v] < 0) d.addEdge(v, T, -ex[v]);
+    }
     if (d.maxflow(S, T) != need) return -1;               // infeasible
     ll F = BIG - d.e[ts].cap;                               // current s->t flow value
     d.e[ts].cap = d.e[ts ^ 1].cap = 0;

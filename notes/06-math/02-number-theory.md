@@ -3,7 +3,7 @@
 ## Sieves
 
 ```cpp
-// [stress-tested] smallest prime factor for all n <= N (linear sieve) + list of primes. N = 1e7 ~ 0.1 s, 40 MB.
+// [stress-tested] smallest prime factor for all n <= N (linear sieve) + primes. N = 1e7: ~0.1 s, 40 MB
 struct Sieve {
     vector<int> spf, primes;
     Sieve(int N) : spf(N + 1, 0) {
@@ -46,7 +46,11 @@ vector<pair<ll, int>> factorTrial(ll n) {      // O(sqrt n); with a primes list,
 ```cpp
 // [stress-tested] deterministic Miller-Rabin for n < 2^64, Pollard rho. ~1 ms per 64-bit number.
 ull mulmod(ull a, ull b, ull m) { return (unsigned __int128)a * b % m; }
-ull powmod(ull b, ull e, ull m) { ull r = 1; b %= m; for (; e; e >>= 1, b = mulmod(b, b, m)) if (e & 1) r = mulmod(r, b, m); return r; }
+ull powmod(ull b, ull e, ull m) {
+    ull r = 1; b %= m;
+    for (; e; e >>= 1, b = mulmod(b, b, m)) if (e & 1) r = mulmod(r, b, m);
+    return r;
+}
 bool isPrime(ull n) {
     if (n < 2) return false;
     for (ull p : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37}) if (n % p == 0) return n == p;

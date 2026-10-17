@@ -60,9 +60,13 @@ Any root-to-leaf path crosses O(log n) heavy chains; positions on a chain are co
 // indexed by pos[]. Edge values: store the edge weight at pos[child] and pass skipLca = true.
 struct HLD {
     int n; vector<int> par, heavy, dep, head, pos, sub;
-    HLD(const vector<vector<int>>& g, int root = 0) : n(sz(g)), par(n, -1), heavy(n, -1), dep(n), head(n), pos(n), sub(n, 1) {
+    HLD(const vector<vector<int>>& g, int root = 0)
+        : n(sz(g)), par(n, -1), heavy(n, -1), dep(n), head(n), pos(n), sub(n, 1) {
         vector<int> order; order.reserve(n); order.push_back(root);
-        rep(i, 0, n) { int v = order[i]; for (int u : g[v]) if (u != par[v]) { par[u] = v; dep[u] = dep[v] + 1; order.push_back(u); } }
+        rep(i, 0, n) {
+            int v = order[i];
+            for (int u : g[v]) if (u != par[v]) { par[u] = v; dep[u] = dep[v] + 1; order.push_back(u); }
+        }
         for (int i = n - 1; i > 0; --i) { int v = order[i]; sub[par[v]] += sub[v]; }
         rep(i, 0, n) { int v = order[i]; int best = 0;
             for (int u : g[v]) if (u != par[v] && sub[u] > best) { best = sub[u]; heavy[v] = u; } }
@@ -95,8 +99,13 @@ Centroid: vertex whose removal leaves components of size ≤ n/2. Recursively de
 // [stress-tested] cpar[v] = parent in the centroid tree (-1 for the root centroid)
 struct Centroid {
     vector<vector<int>> g; vector<int> sub, cpar; vector<char> removed;
-    Centroid(const vector<vector<int>>& g) : g(g), sub(sz(g)), cpar(sz(g), -1), removed(sz(g)) { build(0, -1); }
-    int calcSize(int v, int p) { sub[v] = 1; for (int u : g[v]) if (u != p && !removed[u]) sub[v] += calcSize(u, v); return sub[v]; }
+    Centroid(const vector<vector<int>>& g)
+        : g(g), sub(sz(g)), cpar(sz(g), -1), removed(sz(g)) { build(0, -1); }
+    int calcSize(int v, int p) {
+        sub[v] = 1;
+        for (int u : g[v]) if (u != p && !removed[u]) sub[v] += calcSize(u, v);
+        return sub[v];
+    }
     int find(int v, int p, int tot) {
         for (int u : g[v]) if (u != p && !removed[u] && sub[u] * 2 > tot) return find(u, v, tot);
         return v;
