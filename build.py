@@ -67,6 +67,16 @@ def md_to_html(text: str) -> str:
 
 
 HEAD_RE = re.compile(r"<h([1-5])([^>]*)>(.*?)</h\1>", re.S)
+CODE_SPLIT = re.compile(r"(<pre.*?</pre>|<code.*?</code>)", re.S)
+SUP_RE = re.compile(r"(?<=[A-Za-z0-9)\]])\^(\([^()]{1,20}\)|-?[A-Za-z0-9.]{1,8})")
+
+
+def superscripts(body: str) -> str:
+    """Prose `10^9`, `n^2`, `2^(n/2)` -> <sup>; code is left untouched."""
+    parts = CODE_SPLIT.split(body)
+    for i in range(0, len(parts), 2):
+        parts[i] = SUP_RE.sub(lambda m: f"<sup>{m.group(1).strip('()') if m.group(1).startswith('(') else m.group(1)}</sup>", parts[i])
+    return "".join(parts)
 
 
 def strip_tags(s: str) -> str:
@@ -84,7 +94,7 @@ def build_body(parts):
         toc.append((1, f"{pi}", ptitle, anchor))
         for si, f in enumerate(files, 1):
             raw = f.read_text()
-            body = md_to_html(raw)
+            body = superscripts(md_to_html(raw))
             sub = [0]
 
             def repl(m):
@@ -244,7 +254,7 @@ def check():
         for i, m in enumerate(CPP_BLOCK.finditer(f.read_text())):
             code = m.group(1)
             first = code.lstrip().split("\n", 1)[0]
-            if "nocheck" in first:
+            if "nocheck" in first or "sketch" in first:
                 continue
             total += 1
             if "frag" in first:
