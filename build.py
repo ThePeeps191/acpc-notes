@@ -69,7 +69,7 @@ def md_to_html(text: str) -> str:
 
 HEAD_RE = re.compile(r"<h([1-5])([^>]*)>(.*?)</h\1>", re.S)
 CODE_SPLIT = re.compile(r"(<pre.*?</pre>|<code.*?</code>)", re.S)
-SUP_RE = re.compile(r"(?<=[A-Za-z0-9)\]])\^(\([^()]{1,20}\)|-?[A-Za-z0-9.]{1,8})")
+SUP_RE = re.compile(r"(?<=[A-Za-z0-9)\]])\^(\([^()]{1,20}\)|-?[A-Za-z0-9]{1,8}(?:\.[0-9]+)?)")
 
 
 def superscripts(body: str) -> str:
@@ -81,6 +81,7 @@ def superscripts(body: str) -> str:
 
 
 def strip_tags(s: str) -> str:
+    s = re.sub(r"<sup>(.*?)</sup>", r"^\1", s)  # keep 2^61 readable in the contents
     return html.unescape(re.sub(r"<[^>]+>", "", s)).strip()
 
 
@@ -186,8 +187,6 @@ def find_pages(pdf: Path, toc):
 def build_toc_html(toc, pages):
     rows = []
     for (lvl, num, title, a), pg in zip(toc, pages):
-        if lvl > 2:
-            continue
         rows.append(f"<div class='toc{lvl}'><span class='tn'>{num}</span>"
                     f"<span class='tt'>{html.escape(title)}</span>"
                     f"<span class='tp'>{pg}</span></div>")

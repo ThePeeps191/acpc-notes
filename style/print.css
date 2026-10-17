@@ -53,9 +53,11 @@ blockquote p { margin: 1.5pt 0; }
 .toc { columns: 2; column-gap: 18pt; }
 .toc-title { column-span: all; font-size: 16pt; font-weight: 700; color: #1d4f91;
              border-bottom: 2pt solid #1d4f91; margin-bottom: 6pt; }
-.toc1, .toc2 { display: flex; break-inside: avoid; }
+.toc1, .toc2, .toc3 { display: flex; break-inside: avoid; }
 .toc1 { font-weight: 700; margin-top: 5pt; color: #1d4f91; font-size: 10pt; }
-.toc2 { padding-left: 4pt; font-size: 8.6pt; line-height: 1.28; }
+.toc2 { padding-left: 4pt; font-size: 8.6pt; line-height: 1.28; font-weight: 600; margin-top: 1.5pt; }
+.toc3 { padding-left: 14pt; font-size: 7.4pt; line-height: 1.2; color: #333; }
+.toc3 .tn { min-width: 30pt; }
 .tn { min-width: 26pt; color: #6a86b0; }
 .tt { flex: 1; }
 .tp { min-width: 18pt; text-align: right; }
