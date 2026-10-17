@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from pathlib import Path
 
 import markdown
@@ -158,6 +159,7 @@ def render_pdf(html_text: str, out: Path, numbered: bool):
 
 
 def norm(s: str) -> str:
+    s = unicodedata.normalize("NFKC", s)  # undo ligatures (fi, ffl) in extracted text
     return re.sub(r"[^0-9a-z]", "", s.lower())
 
 
