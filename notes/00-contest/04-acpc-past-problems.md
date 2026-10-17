@@ -56,8 +56,8 @@ Kattis difficulty in brackets. Technique = the intended core idea (my analysis o
 | | City Numbers [4.4] | tree DP dp[v][colour], keep best & second best child value (§4.3) |
 | | Long Walk [5.5] | implicit graph i ↔ 2i mod 2^n: bit manipulation, LCA-like on binary strings |
 | | Braaaains [5.8] | Frobenius/coin reachability: Dijkstra on residues mod smallest size (§5.1) |
-| | Tricky Factoring [6.7] | factor a, c (primes < 10^6), enumerate divisor pairs, count distinct b = dg + ef |
-| | Maximal Parentheticals [8.0] | interval DP over expression tracking max and min (signs flip) |
+| | Tricky Factoring [6.7] | b = u + ac/u over divisors u of ac ⇒ answer 2·⌈τ(ac)/2⌉; factor via sieve |
+| | Maximal Parentheticals [8.0] | interval DP tracking max and min; parentheses can create unary minus + implicit multiplication |
 | | Escape Routes [8.3] | min #paths covering all DAG edges = min flow with lower bounds (§6.1) |
 | 2023 | Buildin' Fences [1.5] | implementation |
 | | Flying Straight [3.0] | trigonometry (arc vs tangent) |

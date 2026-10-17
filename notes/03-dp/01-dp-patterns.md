@@ -77,7 +77,7 @@ ll countPalSubseq(const string& s, ll mod) {
 ```
 
 - **Split point**: `dp[l][r] = min over l ≤ k < r of dp[l][k] + dp[k+1][r] + cost(l, r)` (matrix chain, merging stones, optimal BST; Knuth optimisation §4.4 if cost is quadrangle-monotone).
-- **Expressions with + and −, choose parenthesisation to maximise** (ACPC 2022 *Maximal Parentheticals*): keep **both max and min** of every sub-expression, since `a − (b)` is maximised by minimising b. With multiplication by negatives also keep both.
+- **Expressions with + and −, choose parenthesisation to maximise** (ACPC 2022 *Maximal Parentheticals*): keep **both max and min** of every sub-expression, since `a − (b)` is maximised by minimising b. With multiplication by negatives also keep both (that problem also lets parentheses create unary minus + implicit multiplication — enumerate every rule combination).
 - **Remove/merge adjacent elements** ("zuma", "remove all with cost"): dp over [l, r] plus an extra dimension for "how many equal elements are glued to the right end".
 - **Convex polygon DP** (triangulations, ACPC 2018 *Trimming Convex Polygons*): vertices 0..n−1 in order; choosing a sub-polygon = choosing a subsequence of vertices; its area is a fan of triangles from the first chosen vertex. dp over (first kept vertex fixed, last kept vertex) with transitions adding one triangle: O(n³).
 - **Circular** intervals: double the array and take windows of length n, or fix the element at position 0.
