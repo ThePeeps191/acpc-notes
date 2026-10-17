@@ -244,37 +244,51 @@ def find_gxx():
     sys.exit("no g++ found (set CXX)")
 
 
+def compile_ok(gxx, src, tmpdir):
+    p = tmpdir / "a.cpp"
+    p.write_text(src)
+    r = subprocess.run([gxx, "-std=gnu++17", "-fsyntax-only", "-Wall", "-Wextra",
+                        "-Wno-unused", "-Wno-sign-compare", "-Wno-unused-parameter", "-Wno-misleading-indentation",
+                        str(p)], capture_output=True, text=True)
+    return r.returncode == 0, r.stderr
+
+
 def check():
-    """Compile every ```cpp block. A block whose first line is `// frag` is a
-    statement fragment and is wrapped in a function; `// nocheck` skips it."""
+    """Compile every ```cpp block (with the template prelude). First-line markers:
+    `// frag` = statement fragment, wrapped in a function; `// sketch` / `// nocheck` =
+    skipped. A block may use declarations from earlier blocks of the same file."""
     gxx = find_gxx()
     tmpdir = Path(tempfile.mkdtemp())
     total = bad = 0
     for f in sorted(NOTES.rglob("*.md")):
-        for i, m in enumerate(CPP_BLOCK.finditer(f.read_text())):
+        text = f.read_text()
+        earlier = []  # declaration blocks seen so far in this file
+        for i, m in enumerate(CPP_BLOCK.finditer(text)):
             code = m.group(1)
             first = code.lstrip().split("\n", 1)[0]
             if "nocheck" in first or "sketch" in first:
                 continue
             total += 1
-            if "frag" in first:
-                src = PRELUDE + "void __frag(){\n" + code + "\n}\nint main(){}\n"
-            elif "#include" in code:
-                src = code if "main(" in code else code + "\nint main(){}\n"
+            frag = "frag" in first
+            body = ("void __frag(){\n" + code + "\n}\n") if frag else code
+            has_main = "main(" in code
+            tail = "" if has_main else "\nint main(){}\n"
+            if "#include <bits/stdc++.h>" in code:
+                ok, err = compile_ok(gxx, code + tail, tmpdir)
             else:
-                src = PRELUDE + code + ("" if "main(" in code else "\nint main(){}\n")
-            p = tmpdir / "a.cpp"
-            p.write_text(src)
-            r = subprocess.run([gxx, "-std=gnu++17", "-fsyntax-only", "-Wall", "-Wextra",
-                                "-Wno-unused", "-Wno-sign-compare", "-Wno-unused-parameter",
-                                str(p)], capture_output=True, text=True)
-            line = f.read_text()[:m.start()].count("\n") + 1
-            if r.returncode != 0 or r.stderr.strip():
-                kind = "ERROR" if r.returncode else "warn"
-                if r.returncode:
-                    bad += 1
-                print(f"--- {kind}: {f.relative_to(ROOT)}:{line} (block {i})")
-                print("\n".join(r.stderr.splitlines()[:12]))
+                ok, err = compile_ok(gxx, PRELUDE + body + tail, tmpdir)
+                if not ok and earlier:
+                    ok, err = compile_ok(gxx, PRELUDE + "\n".join(earlier) + body + tail, tmpdir)
+            if not frag and not has_main and "#include <bits/stdc++.h>" not in code:
+                earlier.append(code)
+            line = text[:m.start()].count("\n") + 1
+            if not ok:
+                bad += 1
+                print(f"--- ERROR: {f.relative_to(ROOT)}:{line} (block {i})")
+                print("\n".join(err.splitlines()[:12]))
+            elif err.strip():
+                print(f"--- warn: {f.relative_to(ROOT)}:{line} (block {i})")
+                print("\n".join(err.splitlines()[:6]))
     print(f"checked {total} blocks, {bad} failed")
     sys.exit(1 if bad else 0)
 
