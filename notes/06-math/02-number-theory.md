@@ -30,6 +30,7 @@ struct Sieve {
 ## Trial division (n ≤ 10^12–10^14) and factoring big numbers
 
 ```cpp
+// [stress-tested]
 vector<pair<ll, int>> factorTrial(ll n) {      // O(sqrt n); with a primes list, O(pi(sqrt n))
     vector<pair<ll, int>> f;
     for (ll p = 2; p * p <= n; ++p) if (n % p == 0) {
@@ -96,6 +97,7 @@ void factorRho(ull n, map<ull, int>& f) {
 ## Euler's totient and Möbius
 
 ```cpp
+// [stress-tested]
 ll phi(ll n) {                    // O(sqrt n)
     ll r = n;
     for (ll p = 2; p * p <= n; ++p) if (n % p == 0) { while (n % p == 0) n /= p; r -= r / p; }

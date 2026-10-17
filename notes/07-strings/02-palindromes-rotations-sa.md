@@ -48,6 +48,7 @@ Works for any sequence (vector of ints) — useful for necklaces, cyclic polygon
 ## Trie
 
 ```cpp
+// [stress-tested]
 struct Trie {
     vector<array<int, 26>> nxt; vector<int> endCnt, passCnt;
     Trie() { newNode(); }

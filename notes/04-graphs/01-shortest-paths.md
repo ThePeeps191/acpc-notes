@@ -9,9 +9,54 @@
 | all pairs, n ≤ 500 | Floyd–Warshall | O(n³) |
 | DAG (any weights) | DP in topological order | O(n + m) |
 
+## Basics: bipartite check, cycle detection
+
+```cpp
+// [stress-tested] colour[v] in {0,1} if bipartite; returns false if an odd cycle exists
+bool bipartite(const vector<vector<int>>& g, vector<int>& colour) {
+    int n = sz(g); colour.assign(n, -1);
+    rep(s, 0, n) if (colour[s] < 0) {
+        colour[s] = 0; queue<int> q; q.push(s);
+        while (!q.empty()) {
+            int u = q.front(); q.pop();
+            for (int v : g[u]) {
+                if (colour[v] < 0) { colour[v] = colour[u] ^ 1; q.push(v); }
+                else if (colour[v] == colour[u]) return false;
+            }
+        }
+    }
+    return true;
+}
+// [stress-tested] directed graph: returns the vertices of some cycle (in order), or {} if acyclic
+vector<int> findCycle(const vector<vector<int>>& g) {
+    int n = sz(g); vector<int> state(n, 0), par(n, -1), it(n, 0);
+    rep(s, 0, n) if (!state[s]) {
+        vector<int> st = {s}; state[s] = 1;
+        while (!st.empty()) {
+            int u = st.back();
+            if (it[u] == sz(g[u])) { state[u] = 2; st.pop_back(); continue; }
+            int v = g[u][it[u]++];
+            if (state[v] == 0) { state[v] = 1; par[v] = u; st.push_back(v); }
+            else if (state[v] == 1) {                 // back edge u -> v closes a cycle
+                vector<int> cyc = {v};
+                for (int x = u; x != v; x = par[x]) cyc.push_back(x);
+                reverse(cyc.begin() + 1, cyc.end());
+                return cyc;
+            }
+        }
+    }
+    return {};
+}
+```
+
+- Undirected cycle exists ⇔ some component has m_c ≥ n_c (or DSU `unite` fails).
+- **Shortest cycle (girth)** in an unweighted undirected graph: BFS from every vertex; a non-tree edge (u, v) gives a cycle of length d[u] + d[v] + 1; O(nm).
+- **k-th shortest walk** s → t (k small): Dijkstra where each vertex may be popped up to k times; the k-th pop of t is the answer. **Second shortest path** (strictly longer): keep `d1[v] < d2[v]` per vertex.
+
 ## BFS on grids (template)
 
 ```cpp
+// [stress-tested]
 const int DR[] = {-1, 1, 0, 0}, DC[] = {0, 0, -1, 1};   // add diagonals for 8-neighbour
 vector<vector<int>> gridBFS(const vector<string>& g, vector<pii> sources) {
     int R = sz(g), C = sz(g[0]);
@@ -53,7 +98,7 @@ Typical: "minimum number of walls to break", "minimum number of direction change
 ## Dijkstra
 
 ```cpp
-// adj[u] = {(v, w)}, w >= 0. par gives the shortest path tree.
+// [stress-tested] adj[u] = {(v, w)}, w >= 0. par gives the shortest path tree.
 vector<ll> dijkstra(const vector<vector<pair<int, ll>>>& adj, const vector<int>& srcs, vector<int>* par = nullptr) {
     int n = sz(adj); vector<ll> d(n, INF);
     if (par) par->assign(n, -1);
@@ -85,6 +130,7 @@ vector<ll> dijkstra(const vector<vector<pair<int, ll>>>& adj, const vector<int>&
 Coins c_1..c_k (unbounded), smallest coin `a`. `d[r]` = smallest representable total ≡ r (mod a). Then X is representable ⇔ `d[X mod a] ≤ X`. Largest non-representable = max(d[r]) − a (if gcd = 1). ACPC 2022 *Braaaains*.
 
 ```cpp
+// [stress-tested]
 vector<ll> residueDist(const vector<ll>& coins) {
     ll a = *min_element(all(coins));
     vector<ll> d(a, INF); d[0] = 0;
@@ -101,7 +147,7 @@ vector<ll> residueDist(const vector<ll>& coins) {
 ## Bellman–Ford and negative cycles
 
 ```cpp
-// edges (u, v, w). Returns dist; dist = -INF for vertices reachable from a negative cycle.
+// [stress-tested] edges (u, v, w). Returns dist; dist = -INF for vertices reachable from a negative cycle.
 vector<ll> bellmanFord(int n, const vector<array<ll, 3>>& edges, int s) {
     vector<ll> d(n, INF); d[s] = 0;
     rep(it, 0, n) for (auto [u, v, w] : edges)
@@ -117,7 +163,7 @@ Marking only in the n-th round misses some affected vertices, so the second loop
 ## Floyd–Warshall
 
 ```cpp
-// d[i][j] = edge weight or INF, d[i][i] = 0. Negative cycle through i iff d[i][i] < 0 afterwards.
+// [stress-tested] d[i][j] = edge weight or INF, d[i][i] = 0. Negative cycle through i iff d[i][i] < 0 afterwards.
 void floyd(vector<vector<ll>>& d) {
     int n = sz(d);
     rep(k, 0, n) rep(i, 0, n) if (d[i][k] < INF) rep(j, 0, n)

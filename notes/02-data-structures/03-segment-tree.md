@@ -104,6 +104,39 @@ struct LazySeg {
 | matrix product (DP transitions along array) | 2×2 / 3×3 matrix | matrix multiply (order matters) |
 | area of union of rectangles (sweep) | `cnt, coveredLen` | no push: `covered = cnt > 0 ? len : left + right` |
 
+## Persistent segment tree: k-th smallest in a range
+
+```cpp
+// [stress-tested] versions: root[0] = 0 (empty), root[i+1] = insert a[i] into root[i].
+// kth(root[l], root[r+1], k) = k-th smallest (1-based) value index among a[l..r].
+struct PST {
+    struct N { int l, r, c; };
+    vector<N> t; int V;                       // values are 0..V-1 (compress first)
+    PST(int V) : t(1, {0, 0, 0}), V(V) {}
+    int insert(int prev, int pos) { return ins(prev, 0, V - 1, pos); }
+    int ins(int prev, int lo, int hi, int pos) {
+        int cur = sz(t); t.push_back(t[prev]); t[cur].c++;
+        if (lo < hi) {
+            int mid = (lo + hi) / 2;
+            if (pos <= mid) { int x = ins(t[prev].l, lo, mid, pos); t[cur].l = x; }
+            else { int x = ins(t[prev].r, mid + 1, hi, pos); t[cur].r = x; }
+        }
+        return cur;
+    }
+    int kth(int a, int b, int k) {
+        int lo = 0, hi = V - 1;
+        while (lo < hi) {
+            int mid = (lo + hi) / 2, cnt = t[t[b].l].c - t[t[a].l].c;
+            if (k <= cnt) { a = t[a].l; b = t[b].l; hi = mid; }
+            else { k -= cnt; a = t[a].r; b = t[b].r; lo = mid + 1; }
+        }
+        return lo;
+    }
+};
+```
+
+Memory: n·(log V + 1) nodes. The same "difference of two versions" trick counts values ≤ x in a range, online.
+
 ## Variations (when you need them)
 
 - **Segment tree on values** (counts per value, compressed): k-th smallest by descending (go left if left count ≥ k).

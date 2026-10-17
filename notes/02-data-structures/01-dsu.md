@@ -1,6 +1,7 @@
 # Disjoint Set Union
 
 ```cpp
+// [stress-tested]
 struct DSU {
     vector<int> p;                       // p[x] < 0: x is root, size = -p[x]
     DSU(int n) : p(n, -1) {}
@@ -33,6 +34,7 @@ Recursion depth is O(log n) thanks to union by size, so `find` is safe even for 
 Maintains `d[x]` = value(x) − value(root) for relations like "x and y differ by w" or parity "x and y have different colours".
 
 ```cpp
+// [stress-tested]
 struct WDSU {
     vector<int> p; vector<ll> d;         // d[x] = val[x] - val[parent chain root]
     WDSU(int n) : p(n, -1), d(n, 0) {}
@@ -62,6 +64,7 @@ For parity, use w ∈ {0,1} and compare `(d[b] - d[a]) & 1` (or replace + by xor
 No path compression; `undo()` pops the last union. Each `find` is O(log n).
 
 ```cpp
+// [stress-tested]
 struct RollbackDSU {
     vector<int> p; vector<pair<int,int>> st;   // (attached root, old parent size)
     int comps;

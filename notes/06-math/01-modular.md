@@ -31,6 +31,7 @@ ll invGeneral(ll a, ll m) {                       // inverse mod any m, or -1 if
 ## Factorials and binomials
 
 ```cpp
+// [stress-tested]
 struct Comb {                                     // needs n < p (else n! = 0 mod p)
     vector<ll> f, fi; ll p;
     Comb(int n, ll p) : f(n + 1), fi(n + 1), p(p) {
@@ -78,6 +79,28 @@ pair<ll, ll> crt(ll a1, ll m1, ll a2, ll m2) {
 ```
 
 Fold over many congruences pairwise. Uses: combine answers mod several primes, "the clock shows x mod a and y mod b" problems, periodic events that must coincide (first time t where several cyclic processes are simultaneously in given states).
+
+## Discrete logarithm (baby-step giant-step)
+
+```cpp
+// [stress-tested] smallest x >= 0 with a^x ≡ b (mod m), requires gcd(a, m) = 1; -1 if none. O(√m).
+ll discreteLog(ll a, ll b, ll m) {
+    a %= m; b %= m;
+    if (b == 1 % m) return 0;
+    ll n = (ll)sqrtl((long double)m) + 1, an = 1;
+    rep(i, 0, n) an = (__int128)an * a % m;
+    unordered_map<ll, ll> baby;                       // b * a^j -> largest j
+    ll cur = b;
+    rep(j, 0, n) { baby[cur] = j; cur = (__int128)cur * a % m; }
+    ll g = 1;
+    for (ll i = 1; i <= n; ++i) {
+        g = (__int128)g * an % m;                     // a^(i n)
+        auto it = baby.find(g);
+        if (it != baby.end()) return i * n - it->second;
+    }
+    return -1;
+}
+```
 
 ## GCD / LCM facts
 

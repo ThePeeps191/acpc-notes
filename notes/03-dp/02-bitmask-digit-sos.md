@@ -5,7 +5,7 @@
 **Assignment / ordering of n ≤ 20 items.** `dp[mask]` = best for having used the set `mask`; the next item index is often `popcount(mask)`.
 
 ```cpp
-// TSP / Hamiltonian path: dp[mask][v] = min cost path visiting mask, ending at v. O(2^n n^2)
+// [stress-tested] TSP / Hamiltonian path: dp[mask][v] = min cost path visiting mask, ending at v. O(2^n n^2)
 ll tsp(const vector<vector<ll>>& d) {      // returns min Hamiltonian cycle from 0
     int n = sz(d);
     vector<vector<ll>> dp(1 << n, vector<ll>(n, INF));
@@ -32,6 +32,7 @@ ll tsp(const vector<vector<ll>>& d) {      // returns min Hamiltonian cycle from
 `F[mask] = Σ_{sub ⊆ mask} A[sub]` in O(n·2^n):
 
 ```cpp
+// [stress-tested]
 void sos(vector<ll>& F, int n) {           // in place: F starts as A
     rep(i, 0, n) rep(mask, 0, 1 << n) if (mask >> i & 1) F[mask] += F[mask ^ (1 << i)];
 }
@@ -46,7 +47,7 @@ Uses: count pairs with `a_i & a_j == 0` (count submasks of the complement), `a_i
 Count integers in [0, N] with a property depending on digits. Answer for [L, R] = f(R) − f(L − 1).
 
 ```cpp
-// count x in [0, N] whose digit sum is divisible by K (K <= 100)
+// [stress-tested] count x in [0, N] whose digit sum is divisible by K (K <= 100)
 ll countDigitSum(ll N, int K) {
     if (N < 0) return 0;
     string s = to_string(N); int n = sz(s);
@@ -72,6 +73,7 @@ Extra state flags as needed: `started` (to handle leading zeros, e.g. "no two ad
 Count domino tilings of an n × m grid (n ≤ 10): process cells in row-major order; mask = which of the next m cells are already covered.
 
 ```cpp
+// [stress-tested]
 ll dominoTilings(int n, int m, ll mod) {          // m = width (small)
     vector<ll> dp(1 << m, 0); dp[0] = 1;
     rep(i, 0, n) rep(j, 0, m) {

@@ -5,6 +5,7 @@
 Works for idempotent operations (min, max, gcd, and, or). O(n log n) build.
 
 ```cpp
+// [stress-tested]
 struct Sparse {
     vector<vector<ll>> t;
     static ll op(ll a, ll b) { return min(a, b); }
@@ -96,6 +97,7 @@ Keyed treap (ordered by value) = same with split by key `t[x].val < k`. Add othe
 Needs O(1) (or O(log)) add/remove of one element at either end. Example: number of distinct values in [l, r].
 
 ```cpp
+// [stress-tested]
 vector<int> mo(const vector<int>& a, const vector<pair<int,int>>& qs) {  // inclusive queries
     int n = sz(a), q = sz(qs), B = max(1, (int)(n / sqrt(max(q, 1))));
     vector<int> ord(q); iota(all(ord), 0);

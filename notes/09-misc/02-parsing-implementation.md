@@ -69,6 +69,7 @@ struct Parser {
 ## Dates and times
 
 ```cpp
+// [stress-tested]
 bool leap(int y) { return (y % 4 == 0 && y % 100 != 0) || y % 400 == 0; }
 int daysInMonth(int y, int m) { static const int d[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; return d[m - 1] + (m == 2 && leap(y)); }
 // days since a fixed epoch (proleptic Gregorian); difference of two dates = difference of these

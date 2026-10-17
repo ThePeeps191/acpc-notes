@@ -3,7 +3,7 @@
 ## Minimum spanning tree
 
 ```cpp
-// Kruskal: edges (w, u, v). Returns total weight (n-1 edges if connected). Needs DSU (§3.1).
+// [stress-tested] Kruskal: edges (w, u, v). Returns total weight (n-1 edges if connected). Needs DSU (§3.1).
 struct DSUk { vector<int> p; DSUk(int n) : p(n, -1) {}
     int f(int x) { return p[x] < 0 ? x : p[x] = f(p[x]); }
     bool u(int a, int b) { a = f(a); b = f(b); if (a == b) return 0; if (p[a] > p[b]) swap(a, b); p[a] += p[b]; p[b] = a; return 1; } };
@@ -25,7 +25,7 @@ ll kruskal(int n, vector<tuple<ll, int, int>> edges, vector<tuple<ll, int, int>>
 ## Topological sort and DAG DP
 
 ```cpp
-// Kahn. Returns empty vector if there is a cycle. Use a min-heap instead of queue for lexicographically smallest order.
+// [stress-tested] Kahn. Returns empty vector if there is a cycle. Use a min-heap instead of queue for lexicographically smallest order.
 vector<int> topo(const vector<vector<int>>& g) {
     int n = sz(g); vector<int> indeg(n), order;
     rep(u, 0, n) for (int v : g[u]) indeg[v]++;
@@ -49,7 +49,7 @@ vector<int> topo(const vector<vector<int>>& g) {
 Structure: each component is one cycle with in-trees hanging off it.
 
 ```cpp
-// cycId[v] = id of the cycle containing v (-1 if v is on a tail); cycLen[id] = its length
+// [stress-tested] cycId[v] = id of the cycle containing v (-1 if v is on a tail); cycLen[id] = its length
 void functionalCycles(const vector<int>& f, vector<int>& cycId, vector<int>& cycLen) {
     int n = sz(f); vector<int> state(n, 0); cycId.assign(n, -1); cycLen.clear();
     rep(s, 0, n) if (!state[s]) {

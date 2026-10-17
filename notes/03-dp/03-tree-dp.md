@@ -3,7 +3,7 @@
 Root the tree (usually at 0), compute children before parents. For n up to 10^6 use an **iterative** order: BFS/DFS order array, then process it in reverse.
 
 ```cpp
-// parent + order (pre-order). Process `for (int i = n-1; i >= 0; --i) v = order[i]` for bottom-up.
+// [stress-tested] parent + order (pre-order). Process `for (int i = n-1; i >= 0; --i) v = order[i]` for bottom-up.
 void rootTree(const vector<vector<int>>& g, int root, vector<int>& par, vector<int>& order) {
     int n = sz(g); par.assign(n, -1); order.clear(); order.reserve(n);
     vector<int> st = {root}; par[root] = root;
@@ -27,7 +27,7 @@ void rootTree(const vector<vector<int>>& g, int root, vector<int>& par, vector<i
 `dp[v][c]` = min cost of subtree of v when v gets colour c = cost(c) + Σ_children min_{c' ≠ c} dp[child][c']. The inner min over c' ≠ c is O(1) with the child's **best and second best**:
 
 ```cpp
-// colours 1..k, cost of colour c = c. Returns min total cost (k >= 2 always feasible for a tree)
+// [stress-tested] colours 1..k, cost of colour c = c. Returns min total cost (k >= 2 always feasible for a tree)
 ll minColouring(const vector<vector<int>>& g, int k) {
     int n = sz(g); vector<int> par, order; rootTree(g, 0, par, order);
     vector<vector<ll>> dp(n, vector<ll>(k + 1, 0));
@@ -65,7 +65,7 @@ cur = nd; sv += sc;
 Two passes: `down[v]` (subtree answer) bottom-up, then `up[v]` (answer of the part outside v's subtree) top-down; combine. Requires: the contribution of a child to its parent can be computed from the child's value, and the combination is "removable" (sum) or handled with prefix/suffix aggregates (max).
 
 ```cpp
-// sum of distances from every vertex to all others, O(n)
+// [stress-tested] sum of distances from every vertex to all others, O(n)
 vector<ll> sumDistAll(const vector<vector<int>>& g) {
     int n = sz(g); vector<int> par, order; rootTree(g, 0, par, order);
     vector<ll> sub(n, 1), down(n, 0), ans(n, 0);

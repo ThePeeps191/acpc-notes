@@ -127,6 +127,7 @@ If `f(k)` = optimal cost with exactly k groups/items is **convex** in k, then fo
 Maintain a convex piecewise-linear function by the multiset of its slope-change points. Classic: minimum Σ|a_i − b_i| to make b non-decreasing:
 
 ```cpp
+// [stress-tested]
 ll minCostNonDecreasing(const vector<ll>& a) {
     priority_queue<ll> pq; ll ans = 0;
     for (ll x : a) {

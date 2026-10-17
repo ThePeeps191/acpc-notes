@@ -13,7 +13,7 @@ Tricks: **memoized recursion** is the fastest way to a correct DP when the order
 ## Knapsack family
 
 ```cpp
-// 0/1 knapsack: max value with capacity W  (iterate capacity DOWN)
+// [stress-tested] 0/1 knapsack: max value with capacity W  (iterate capacity DOWN)
 ll knap01(const vector<int>& w, const vector<ll>& v, int W) {
     vector<ll> dp(W + 1, 0);
     rep(i, 0, sz(w)) for (int c = W; c >= w[i]; --c) dp[c] = max(dp[c], dp[c - w[i]] + v[i]);
@@ -36,7 +36,7 @@ ll countWays(const vector<int>& coins, int S, ll mod) {
 ## Sequences
 
 ```cpp
-// LIS length, O(n log n). For non-decreasing use upper_bound.
+// [stress-tested] LIS length, O(n log n). For non-decreasing use upper_bound.
 int lis(const vector<ll>& a) {
     vector<ll> d;                       // d[k] = min tail of an increasing subsequence of length k+1
     for (ll x : a) {
@@ -60,7 +60,7 @@ To reconstruct LIS: store for each i the position `pos[i]` it took in d and `pre
 `dp[l][r]` from smaller intervals; iterate `len` from 1 to n. O(n³) with a split point, O(n²) without.
 
 ```cpp
-// number of palindromic subsequences (as index sets, non-empty) mod p — ACPC 2016 Palindromic Naming
+// [stress-tested] number of palindromic subsequences (as index sets, non-empty) mod p — ACPC 2016 Palindromic Naming
 ll countPalSubseq(const string& s, ll mod) {
     int n = sz(s);
     vector<vector<ll>> dp(n, vector<ll>(n, 0));

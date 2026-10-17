@@ -97,8 +97,53 @@ int gauss(vector<vector<double>> a, vector<double>& ans) {
 ```
 
 - **Expected values with cycles** (random walk on a graph, Markov chains): one equation per state `E_v − Σ p_vu E_u = c_v`, absorbing states `E = 0`. n ≤ 500.
-- Mod p version: same code with modular inverse instead of division (exact, no EPS). **Determinant** = product of pivots × (−1)^(#swaps); **rank** = number of pivots.
+- **Rank** = number of pivots.
+
+```cpp
+// [stress-tested] determinant mod prime p (entries any ll). Same elimination solves systems mod p.
+ll detMod(vector<vector<ll>> a, ll p) {
+    auto pw = [&](ll b, ll e) { ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r; };
+    int n = sz(a); ll det = 1;
+    for (auto& row : a) for (auto& x : row) x = ((x % p) + p) % p;
+    rep(c, 0, n) {
+        int piv = -1; rep(r, c, n) if (a[r][c]) { piv = r; break; }
+        if (piv < 0) return 0;
+        if (piv != c) { swap(a[piv], a[c]); det = (p - det) % p; }
+        det = det * a[c][c] % p;
+        ll iv = pw(a[c][c], p - 2);
+        rep(r, c + 1, n) if (a[r][c]) {
+            ll f = a[r][c] * iv % p;
+            rep(k, c, n) a[r][k] = ((a[r][k] - f * a[c][k]) % p + p) % p;
+        }
+    }
+    return det;
+}
+```
 - **Kirchhoff (matrix-tree):** #spanning trees = any cofactor of the Laplacian L = D − A (delete one row and column, take determinant; mod p or doubles for small n).
+
+## Polynomial interpolation (Lagrange)
+
+If the answer is a polynomial of degree k in n (e.g. Σ_{i=1}^{n} i^k has degree k + 1; many counting DPs with a fixed number of nested sums), compute it for n = 0..k by brute force and evaluate at huge n in O(k).
+
+```cpp
+// [stress-tested] y[i] = P(i) for i = 0..k (deg P <= k). Returns P(x) mod prime p (p > k).
+ll lagrange(const vector<ll>& y, ll x, ll p) {
+    int k = sz(y) - 1; x %= p; if (x < 0) x += p;
+    if (x <= k) return y[x] % p;
+    auto pw = [&](ll b, ll e) { ll r = 1; for (b %= p; e; e >>= 1, b = b * b % p) if (e & 1) r = r * b % p; return r; };
+    vector<ll> pre(k + 2, 1), suf(k + 2, 1), fact(k + 1, 1);
+    rep(i, 0, k + 1) pre[i + 1] = pre[i] * ((x - i) % p) % p;
+    for (int i = k; i >= 0; --i) suf[i] = suf[i + 1] * ((x - i) % p) % p;
+    rep(i, 1, k + 1) fact[i] = fact[i - 1] * i % p;
+    ll res = 0;
+    rep(i, 0, k + 1) {
+        ll num = pre[i] * suf[i + 1] % p, den = fact[i] * fact[k - i] % p;
+        ll term = y[i] % p * num % p * pw(den, p - 2) % p;
+        res = ((k - i) & 1) ? (res - term + p) % p : (res + term) % p;
+    }
+    return res;
+}
+```
 
 ## XOR basis (Gaussian elimination over GF(2))
 

@@ -28,7 +28,7 @@ struct BIT {
 ## Range update, point query / range update, range query
 
 ```cpp
-// range add, point query: store differences
+// [stress-tested] range add, point query: store differences
 struct BITRangeAdd {
     BIT b; BITRangeAdd(int n) : b(n + 1) {}
     void add(int l, int r, ll v) { b.add(l, v); b.add(r + 1, -v); }   // a[l..r] += v (inclusive)

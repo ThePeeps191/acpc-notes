@@ -68,7 +68,7 @@ ll closestPair2(vector<Pt> p) {
 ## Circles
 
 ```cpp
-// circumcentre of triangle ABC (non-collinear)
+// [stress-tested] circumcentre of triangle ABC (non-collinear)
 Pd ccCenter(Pd A, Pd B, Pd C) {
     Pd b = C - A, c = B - A;
     return A + (b * c.norm2() - c * b.norm2()).perp() / b.cross(c) / 2;

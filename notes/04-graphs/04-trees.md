@@ -92,7 +92,7 @@ Positions are a DFS pre-order with the heavy child first, so both chains and sub
 Centroid: vertex whose removal leaves components of size ≤ n/2. Recursively decompose: depth O(log n); every path in the tree passes through the centroid of the smallest decomposition component containing both ends.
 
 ```cpp
-// cpar[v] = parent in the centroid tree (-1 for the root centroid)
+// [stress-tested] cpar[v] = parent in the centroid tree (-1 for the root centroid)
 struct Centroid {
     vector<vector<int>> g; vector<int> sub, cpar; vector<char> removed;
     Centroid(const vector<vector<int>>& g) : g(g), sub(sz(g)), cpar(sz(g), -1), removed(sz(g)) { build(0, -1); }

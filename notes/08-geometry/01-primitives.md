@@ -113,6 +113,31 @@ int inPolygon(const vector<Pt>& poly, Pt p) {
 - Area of a polygon cut by a half-plane: walk edges, keep inside vertices + intersection points (Sutherland–Hodgman), O(n).
 - **Polar area** (curve r(θ)): area = ∫ r(θ)²/2 dθ (ACPC 2021 *Wonky Pizza*: r linear in θ → closed-form cubic; then binary search the cut angle).
 
+```cpp
+// [stress-tested] strictly convex CCW polygon (n >= 3): is p inside or on the boundary? O(log n)
+bool inConvex(const vector<Pt>& poly, Pt p) {
+    int n = sz(poly);
+    if (poly[0].cross(poly[1], p) < 0 || poly[0].cross(poly[n - 1], p) > 0) return false;
+    int lo = 1, hi = n - 1;
+    while (hi - lo > 1) { int mid = (lo + hi) / 2; (poly[0].cross(poly[mid], p) >= 0 ? lo : hi) = mid; }
+    return poly[lo].cross(poly[lo + 1], p) >= 0;
+}
+// [stress-tested] part of a polygon to the LEFT of the directed line s -> e (Sutherland–Hodgman).
+// Works for convex polygons (for non-convex ones the result may have degenerate bridges).
+vector<Pd> polygonCut(const vector<Pd>& poly, Pd s, Pd e) {
+    vector<Pd> res; int n = sz(poly);
+    rep(i, 0, n) {
+        Pd cur = poly[i], prev = poly[(i + n - 1) % n];
+        double a = s.cross(e, cur), b = s.cross(e, prev);
+        if ((a > 0) != (b > 0)) res.push_back(cur + (prev - cur) * (a / (a - b)));
+        if (a > 0) res.push_back(cur);
+    }
+    return res;
+}
+```
+
+Intersection of convex polygons / half-planes (small n): start from a big box and `polygonCut` by every half-plane, O(n²).
+
 ## Precision checklist
 
 - Use `long double` if values ~10^9 and you need 1e-6 after subtractive operations.

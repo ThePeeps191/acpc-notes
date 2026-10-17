@@ -45,7 +45,7 @@
 
 ## Burnside / Pólya (counting up to symmetry)
 
-#distinct objects = (1/|G|) Σ_{g ∈ G} fix(g). For colourings, fix(g) = k^{c(g)} with c(g) = number of cycles of g on positions.
+Number of distinct objects = (1/|G|) Σ_{g ∈ G} fix(g). For colourings, fix(g) = k^{c(g)} with c(g) = number of cycles of g on positions.
 
 - **Necklaces** (rotations only), n beads, k colours: (1/n) Σ_{d|n} φ(d) k^{n/d}.
 - **Bracelets** (rotations + reflections): necklaces/2 + (n odd: k^{(n+1)/2}/2; n even: (k^{n/2} + k^{n/2+1})/4).
